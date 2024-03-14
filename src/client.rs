@@ -1,4 +1,4 @@
-use std::marker::PhantomData;
+use std::{env, marker::PhantomData};
 
 use menva::get_env;
 use reqwest::{Client, ClientBuilder, Response};
@@ -37,9 +37,9 @@ pub struct TursoClient<Platform = BasePlatform> {
 }
 
 impl TursoClient {
-    pub fn new() -> Self {
+    pub fn new(token : String) -> Self {
         Self {
-            token: get_env("TOKEN"),
+            token,
             client: ClientBuilder::new().build().unwrap(),
             platform: PhantomData,
         }
@@ -48,7 +48,7 @@ impl TursoClient {
 
 impl Default for TursoClient {
     fn default() -> Self {
-        Self::new()
+        Self::new(env::var("TURSO_TOKEN").expect("failed to find TURSO_TOKEN env var"))
     }
 }
 
